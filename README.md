@@ -73,7 +73,7 @@ Currently, two types of models are supported. To add support for other models, y
 ## 🔁 Workflow
 
 1. Upload a **PDF** or **LaTeX ZIP** file.
-2. The server parses content into `uploads/process/<project_name>__/`. (This project provides two examples.)
+2. The server parses content into `uploads/process/<project_name>__/`. (This project provides two examples in `/uploads`.)
 3. Choose checks in the UI.
 4. View detailed results and recommendations.
 
