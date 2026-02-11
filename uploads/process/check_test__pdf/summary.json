@@ -1,0 +1,17 @@
+{
+  "text_files": [
+    "C:\\Users\\Lenovo User\\Desktop\\CS-submit-check\\uploads\\process\\check_test__pdf\\page_1.txt",
+    "C:\\Users\\Lenovo User\\Desktop\\CS-submit-check\\uploads\\process\\check_test__pdf\\page_2.txt"
+  ],
+  "full_text": "C:\\Users\\Lenovo User\\Desktop\\CS-submit-check\\uploads\\process\\check_test__pdf\\full_text.txt",
+  "tables": [],
+  "images": [
+    {
+      "page": 2,
+      "img_index": 1,
+      "path": "C:\\Users\\Lenovo User\\Desktop\\CS-submit-check\\uploads\\process\\check_test__pdf\\page_2_img_1.png",
+      "width": 460,
+      "height": 471
+    }
+  ]
+}

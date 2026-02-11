@@ -1,0 +1,47 @@
+[
+    {
+        "check_type": "metadata",
+        "results": [
+            {
+                "/Author": "David S. Hippocampus",
+                "confidence": "high"
+            },
+            {
+                "/Creator": "LaTeX with hyperref",
+                "confidence": "high"
+            },
+            {
+                "/Producer": "pdfTeX-1.40.27",
+                "confidence": "high"
+            },
+            {
+                "/Keywords": "",
+                "confidence": "medium"
+            },
+            {
+                "/Subject": "",
+                "confidence": "medium"
+            },
+            {
+                "/Title": "",
+                "confidence": "medium"
+            },
+            {
+                "/CreationDate": "D:20260211092316Z",
+                "confidence": "low"
+            },
+            {
+                "/ModDate": "D:20260211092316Z",
+                "confidence": "low"
+            },
+            {
+                "/PTEX.Fullbanner": "This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) kpathsea version 6.4.1",
+                "confidence": "low"
+            },
+            {
+                "/Trapped": "/False",
+                "confidence": "low"
+            }
+        ]
+    }
+]

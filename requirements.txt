@@ -1,0 +1,12 @@
+# architechture
+Flask
+
+# PDF parsing
+PyMuPDF
+pdfplumber
+
+# PDF metadata
+PyPDF2
+
+# LLM
+openai
