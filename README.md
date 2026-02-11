@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="figs/head.png" width="50%">
+</p>
+
 # 🧪 AI Double-Blind Submission Pre-check
 
 A lightweight web app for double -blind pre-submission checks on academic papers.  
@@ -110,3 +114,5 @@ This tool is intended for pre-submission checks only and does not guarantee full
 |![](figs/link.png) | ![](figs/cross.png) |
 |![](figs/metadata.png) | ![](figs/anonymous.png) |
 |![](figs/hidden.png) | ![](figs/summary.png) |
+
+![](figs/view.png)
