@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Submission Pre-check — Research Paper Validation</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🖥️</text></svg>">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #475569;
+            --success: #16a34a;
+            --error: #dc2626;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0; 
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            font-weight: 400;
+        }
+
+        .upload-section {
+            margin-bottom: 2rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: block;
+            margin-bottom: 1rem;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            transition: border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-input-wrapper:hover {
+            border-color: var(--primary);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: block;
+            color: var(--secondary);
+        }
+
+        .file-input-label .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: var(--radius);
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn:disabled {
+            background-color: var(--secondary);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .features {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--light);
+            border-radius: var(--radius);
+        }
+
+        .features h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .features ul {
+            list-style-position: inside;
+            columns: 2;
+            gap: 1rem;
+        }
+
+        .features li {
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .features ul.checklist {
+            list-style: none;
+            padding-left: 0;
+            columns: 2;
+            gap: 1rem;
+        }
+
+        .features ul.checklist li {
+            margin-bottom: 0.6rem;
+            break-inside: avoid;
+        }
+
+        .features ul.checklist label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+        }
+
+        .features ul.checklist input[type="checkbox"] {
+            transform: translateY(1px);
+            accent-color: var(--primary);
+        }
+
+        .features .muted {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .result-section {
+            margin-top: 2rem;
+        }
+
+        .result-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .result-container {
+            position: relative;
+        }
+
+        .result-tabs {
+            display: none;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 0.9rem;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--dark);
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tab-btn.status-true {
+            background: #bbf7d0;
+            border-color: #86efac;
+            color: #14532d;
+        }
+
+        .tab-btn.status-true.active {
+            background: #16a34a;
+            border-color: #16a34a;
+            color: white;
+        }
+
+        .tab-btn.status-false {
+            background: #fecaca;
+            border-color: #fca5a5;
+            color: #7f1d1d;
+        }
+
+        .tab-btn.status-false.active {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: white;
+        }
+
+        .confidence-badge {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .confidence-item {
+            padding: 0.4rem 0.6rem;
+            margin-bottom: 0.4rem;
+            border-left: 3px solid transparent;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+
+        .confidence-item-high {
+            border-left-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .confidence-item-medium {
+            border-left-color: #ea580c;
+            background: #fff7ed;
+        }
+
+        .confidence-item-low {
+            border-left-color: #ca8a04;
+            background: #fefce8;
+        }
+
+        .confidence-details {
+            margin-top: 0.3rem;
+            white-space: pre-wrap;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .confidence-high {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .confidence-medium {
+            background: #ffedd5;
+            color: #c2410c;
+            border: 1px solid #fed7aa;
+        }
+
+        .confidence-low {
+            background: #fef9c3;
+            color: #a16207;
+            border: 1px solid #fde68a;
+        }
+
+        .confidence-unknown {
+            background: #e5e7eb;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .confidence-item-unknown {
+            border-left-color: #9ca3af;
+            background: #f3f4f6;
+        }
+
+        .result-empty {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            background-color: var(--light);
+            min-height: 150px;
+            white-space: pre-wrap;
+        }
+
+        .section-panel {
+            display: none;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            background-color: var(--light);
+        }
+
+        .section-panel.active {
+            display: block;
+        }
+
+        .section-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-top: 0.5rem;
+            background-color: var(--light);
+            min-height: 150px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .section-panel pre {
+            border: none;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+        }
+
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Status styles */
+        .status-success {
+            color: var(--success);
+        }
+
+        .status-error {
+            color: var(--error);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .features ul {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Submission Pre-check System</h1>
+            <h2><b>Double-Blind</b> Validation for AI Research Submissions</h2>
+        </header>
+ 
+        <section class="features">
+            <h3>✅ Detection Capabilities</h3>
+            <ul class="checklist">
+                <li>
+                    <label>
+                        <input type="checkbox" name="checks" value="image_quality" />
+                        Image clarity verification
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="checks" value="link_anonymization" />
+                        Link anonymization check
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="checks" value="cross_ref" />
+                        Image/table citation validation (LaTeX Only)
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="checks" value="pdf_metadata" />
+                        PDF Metadata (PDF Only)
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="checks" value="anonymity" />
+                        Author anonymity check (LLM)
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="checks" value="hidden_prompt" />
+                        Hidden prompt identification (LLM)
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="checks" value="news" disabled />
+                        To be added...
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="checks" value="summary" />
+                        Check Summary (LLM)
+                    </label>
+                </li>
+            </ul>
+        </section>
+
+        <section class="upload-section">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="file-input-wrapper" id="fileWrapper">
+                    <input 
+                        type="file" 
+                        name="file" 
+                        required 
+                        accept=".pdf,.zip"
+                        id="fileInput"
+                    />
+                    <label class="file-input-label" for="fileInput">
+                        <div class="icon">📁</div>
+                        <p>Click to select file or drag & drop</p>
+                        <p class="text-sm">Supported formats: PDF, LaTeX ZIP</p>
+                        <p class="text-sm">(LaTeX ZIP Recommended)</p>
+                    </label>
+                </div>
+
+                <div class="file-info" id="fileInfo">
+                    <p><strong>Selected file:</strong> <span id="fileName">None</span></p>
+                </div>
+
+                <div style="margin-bottom: 1rem; padding: 1rem; background-color: var(--light); border-radius: var(--radius);">
+                    <label><strong>Layout (PDF Only):</strong></label>
+                    <div style="margin-top: 0.5rem;">
+                        <label style="margin-right: 2rem;">
+                            <input type="radio" name="layout" value="single" checked /> Single Column
+                        </label>
+                        <label>
+                            <input type="radio" name="layout" value="dual" /> Dual Column
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="uploadBtn">
+                    Start Pre-check Analysis
+                </button>
+            </form>
+        </section>
+
+        <section class="result-section">
+            <div style="background-color: #fffbeb; border: 1px solid #fbbf24; border-radius: var(--radius); padding: 0.8rem; margin-bottom: 1rem; color: #92400e;">
+                ⚠️ <strong>Important Notice:</strong> The analysis results are for reference only and cannot guarantee 100% accuracy.
+            </div>
+            <h3>📊 Analysis Results</h3>
+            <div class="result-container">
+                <div class="loading" id="loading">Analyzing your submission... Please wait</div>
+                <div class="result-tabs" id="resultTabs">
+                    <button class="tab-btn" data-section="file_info">File Info</button>
+                    <button class="tab-btn" data-section="image_info">Image Info</button>
+                    <button class="tab-btn" data-section="link_info">Link Info</button>
+                    <button class="tab-btn" data-section="cross_ref_info">Cross Ref</button>
+                    <button class="tab-btn" data-section="pdf_metadata">PDF Metadata</button>
+                    <button class="tab-btn" data-section="anonymity_check">Anonymity</button>
+                    <button class="tab-btn" data-section="hidden_prompt_check">Hidden Prompt</button>
+                    <button class="tab-btn" data-section="summary_info">Summary</button>
+                </div>
+                <div id="resultEmpty" class="result-empty">Upload a file and click "Start Pre-check Analysis" to see results.</div>
+
+                <div id="section-file_info" class="section-panel">
+                    <div class="section-title">File Info</div>
+                    <pre id="section-file_info-pre"></pre>
+                </div>
+                <div id="section-image_info" class="section-panel">
+                    <div class="section-title">Fig Info</div>
+                    <pre id="section-image_info-pre"></pre>
+                </div>
+                <div id="section-link_info" class="section-panel">
+                    <div class="section-title">Link Detection</div>
+                    <pre id="section-link_info-pre"></pre>
+                </div>
+                <div id="section-cross_ref_info" class="section-panel">
+                    <div class="section-title">Cross-ref Info</div>
+                    <pre id="section-cross_ref_info-pre"></pre>
+                </div>
+                <div id="section-pdf_metadata" class="section-panel">
+                    <div class="section-title">PDF Metadata</div>
+                    <pre id="section-pdf_metadata-pre"></pre>
+                </div>
+                <div id="section-anonymity_check" class="section-panel">
+                    <div class="section-title">Anonymity detection</div>
+                    <pre id="section-anonymity_check-pre"></pre>
+                </div>
+                <div id="section-hidden_prompt_check" class="section-panel">
+                    <div class="section-title">Prompt Injection</div>
+                    <pre id="section-hidden_prompt_check-pre"></pre>
+                </div>
+                <div id="section-summary_info" class="section-panel">
+                    <div class="section-title">LLM Summary</div>
+                    <pre id="section-summary_info-pre"></pre>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem;">📝 Processing Log</h3>
+            <div class="result-container">
+                <pre id="log" style="background-color: #1e293b; color: #e2e8f0; font-size: 0.85rem; min-height: 150px;">Ready to process files...</pre>
+            </div>
+        </section>
+    </div>
+
+    <section class="container" style="margin-top: 2rem;">
+        <h3 style="color: var(--primary-dark); font-size: 1.1rem; margin-bottom: 1rem;">🤝 Related Resources</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; padding: 0.5rem 0;">
+            <a href="https://labourden.github.io/tpye3view/" style="color: var(--primary); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); transition: all 0.3s ease;">
+                tpye3view - PDF Type3 Font Inspector
+            </a>
+            <a href="https://www.pdf2cmyk.com/" style="color: var(--primary); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); transition: all 0.3s ease;">
+                pdf2cmyk - PDF Color Space Converter
+            </a>
+            <a href="https://github.com/thinkwee/BibGuard" style="color: var(--primary); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); transition: all 0.3s ease;">
+                BibGuard - Bibliography & LaTeX Quality Auditor
+            </a>
+            <a href="https://www.zerogpt.com/" style="color: var(--primary); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); transition: all 0.3s ease;">
+                ZeroGPT - AI Content Detection Tool
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>AI Submission Pre-check System | For Academic Research Use Only</p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const resultEmpty = document.getElementById('resultEmpty');
+        const resultTabs = document.getElementById('resultTabs');
+        const loading = document.getElementById('loading');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileWrapper = document.getElementById('fileWrapper');
+        const log = document.getElementById('log');
+        const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
+        const sectionPanels = {
+            file_info: document.getElementById('section-file_info'),
+            image_info: document.getElementById('section-image_info'),
+            link_info: document.getElementById('section-link_info'),
+            cross_ref_info: document.getElementById('section-cross_ref_info'),
+            pdf_metadata: document.getElementById('section-pdf_metadata'),
+            anonymity_check: document.getElementById('section-anonymity_check'),
+            hidden_prompt_check: document.getElementById('section-hidden_prompt_check'),
+            summary_info: document.getElementById('section-summary_info'),
+        };
+
+        // Store parse results for check
+        let lastParseResult = null;
+        let lastUploadedFileName = null;
+        let isCheckMode = false;
+
+        // Log function
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            log.textContent += `[${timestamp}] ${message}\n`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function hideAllSections() {
+            Object.values(sectionPanels).forEach(panel => {
+                panel.classList.remove('active');
+            });
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+        }
+
+        function showSection(sectionKey) {
+            hideAllSections();
+            const panel = sectionPanels[sectionKey];
+            const btn = tabButtons.find(b => b.dataset.section === sectionKey);
+            if (panel) panel.classList.add('active');
+            if (btn) btn.classList.add('active');
+        }
+
+        function renderSectionData(sectionKey, data) {
+            const pre = document.getElementById(`section-${sectionKey}-pre`);
+            if (!pre) return;
+            const results = data && Object.prototype.hasOwnProperty.call(data, 'results')
+                ? data.results
+                : null;
+            const specialKeys = ['file_info', 'link_info', 'image_info', 'cross_ref_info', 'pdf_metadata', 'anonymity_check', 'hidden_prompt_check'];
+
+            const decodeText = (input) => {
+                if (typeof input !== 'string') return input;
+                let text = input;
+                const trimmed = text.trim();
+                if (
+                    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+                    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+                ) {
+                    try {
+                        text = JSON.parse(trimmed);
+                    } catch (e) {
+                        text = trimmed.slice(1, -1);
+                    }
+                }
+                return text
+                    .replace(/\\r\\n/g, '\n')
+                    .replace(/\\n/g, '\n')
+                    .replace(/\\r/g, '\n');
+            };
+
+            const normalizeConfidenceList = (list) => list.map((item) => {
+                if (typeof item === 'string') {
+                    const m = item.trim().match(/^(high|medium|low)\s*(.*)$/i);
+                    return {
+                        confidence: m ? m[1].toLowerCase() : 'unknown',
+                        type: 'Unknown',
+                        severity: 'Unknown',
+                        location: m ? m[2].trim() : item.trim()
+                    };
+                }
+
+                if (item && typeof item === 'object') {
+                    return {
+                        ...item,
+                        confidence: item.confidence
+                            ? String(item.confidence).toLowerCase()
+                            : 'unknown'
+                    };
+                }
+
+                return {
+                    confidence: 'unknown',
+                    value: String(item)
+                };
+            });
+
+            const renderConfidenceList = (list) => {
+                pre.textContent = '';
+                list.forEach((item) => {
+                    const container = document.createElement('div');
+                    container.classList.add('confidence-item');
+
+                    const conf = String(item.confidence || '').toLowerCase();
+                    if (conf === 'high') container.classList.add('confidence-item-high');
+                    else if (conf === 'medium') container.classList.add('confidence-item-medium');
+                    else if (conf === 'low') container.classList.add('confidence-item-low');
+                    else container.classList.add('confidence-item-unknown');
+
+                    const badge = document.createElement('span');
+                    badge.classList.add('confidence-badge');
+                    if (conf === 'high') badge.classList.add('confidence-high');
+                    else if (conf === 'medium') badge.classList.add('confidence-medium');
+                    else if (conf === 'low') badge.classList.add('confidence-low');
+                    else badge.classList.add('confidence-unknown');
+                    badge.textContent = conf || 'unknown';
+
+                    const details = document.createElement('div');
+                    details.classList.add('confidence-details');
+                    
+                    const detailObj = { ...item };
+                    delete detailObj.confidence;
+
+                    const keys = Object.keys(detailObj);
+
+                    if (keys.length === 1) {
+                        const k = keys[0];
+                        const v = detailObj[k];
+                            details.textContent =
+                            typeof v === 'string'
+                                ? `${k}: ${v}`
+                                : `${k}: ${JSON.stringify(v)}`;
+                    } 
+                    else if (keys.length > 1) {
+                        details.textContent = JSON.stringify(detailObj, null, 2);
+                    } else {
+                        details.textContent = '';
+                    }
+
+                    container.appendChild(badge);
+                    container.appendChild(details);
+                    pre.appendChild(container);
+                });
+            };
+
+            if (typeof results === 'string') {
+                pre.textContent = decodeText(results);
+                return;
+            }
+
+            if (Array.isArray(results) && specialKeys.includes(sectionKey)) {
+                const normalized = normalizeConfidenceList(results);
+                renderConfidenceList(normalized);
+                return;
+            }
+
+            pre.textContent = JSON.stringify(results, null, 2);
+        }
+
+        function renderSections(parsed) {
+            if (!parsed || typeof parsed !== 'object') {
+                resultEmpty.textContent = 'No results to display.';
+                resultEmpty.style.display = 'block';
+                resultTabs.style.display = 'none';
+                hideAllSections();
+                return;
+            }
+
+            resultEmpty.style.display = 'none';
+            resultTabs.style.display = 'flex';
+            tabButtons.forEach(btn => {
+                btn.classList.remove('status-true', 'status-false');
+                const key = btn.dataset.section;
+                const section = parsed[key];
+                if (section && section.available === true) {
+                    btn.classList.add('status-true');
+                } else if (section && section.available === false) {
+                    btn.classList.add('status-false');
+                }
+            });
+            renderSectionData('file_info', parsed.file_info);
+            renderSectionData('image_info', parsed.image_info);
+            renderSectionData('link_info', parsed.link_info);
+            renderSectionData('cross_ref_info', parsed.cross_ref_info);
+            renderSectionData('pdf_metadata', parsed.pdf_metadata);
+            renderSectionData('anonymity_check', parsed.anonymity_check);
+            renderSectionData('hidden_prompt_check', parsed.hidden_prompt_check);
+            renderSectionData('summary_info', parsed.summary_info);
+            showSection('file_info');
+        }
+
+        function getSelectedChecks() {
+            return Array.from(document.querySelectorAll('input[name="checks"]:checked'))
+                .map(input => input.value);
+        }
+
+        function labelForCheck(key) {
+            const labels = {
+                image_quality: 'Image clarity verification',
+                pdf_metadata: 'PDF Metadata',
+                cross_ref: 'Image/table citation validation',
+                link_anonymization: 'Link anonymization check',
+                anonymity: 'Author anonymity check (LLM)',
+                hidden_prompt: 'Hidden prompt identification (LLM)',
+                summary: 'Check Summary (LLM)',
+            };
+            return labels[key] || key;
+        }
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const key = btn.dataset.section;
+                showSection(key);
+            });
+        });
+
+        // File selection handler
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                fileName.textContent = file.name;
+                fileInfo.classList.add('show');
+            } else {
+                fileInfo.classList.remove('show');
+                fileName.textContent = 'None';
+            }
+        });
+
+        // Drag & drop handlers
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileWrapper.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Read CSS variables once
+        const rootStyles = getComputedStyle(document.documentElement);
+        const CSS_PRIMARY = rootStyles.getPropertyValue('--primary').trim() || '#2563eb';
+        const CSS_BORDER = rootStyles.getPropertyValue('--border').trim() || '#e2e8f0';
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileWrapper.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileWrapper.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            fileWrapper.style.borderColor = CSS_PRIMARY;
+            fileWrapper.style.backgroundColor = 'rgba(37, 99, 235, 0.05)';
+        }
+
+        function unhighlight() {
+            fileWrapper.style.borderColor = CSS_BORDER;
+            fileWrapper.style.backgroundColor = 'transparent';
+        }
+
+        fileWrapper.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+
+            if (file) {
+                try {
+                    fileInput.files = dt.files;
+                } catch (err) {
+                    // Some browsers restrict setting input.files directly; build a DataTransfer instead
+                    const dataTransfer = new DataTransfer();
+                    for (let i = 0; i < dt.files.length; i++) dataTransfer.items.add(dt.files[i]);
+                    fileInput.files = dataTransfer.files;
+                }
+                fileName.textContent = file.name;
+                fileInfo.classList.add('show');
+                // Trigger change handlers
+                fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+
+        // Form submission handler
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fd = new FormData(form);
+            
+            // Reset UI state
+            resultEmpty.textContent = '';
+            resultEmpty.style.display = 'block';
+            resultTabs.style.display = 'none';
+            hideAllSections();
+            log.textContent = '';
+            addLog('Starting file upload...');
+            loading.classList.add('show');
+            uploadBtn.disabled = true;
+            
+            try {
+                addLog(`Uploading file: ${fileInput.files[0].name}`);
+                const res = await fetch('/api/upload', { 
+                    method: 'POST', 
+                    body: fd 
+                });
+                
+                if (!res.ok) {
+                    let errMsg = `HTTP error! Status: ${res.status}`;
+                    try {
+                        const errJson = await res.json();
+                        if (errJson && errJson.error) {
+                            errMsg = errJson.error;
+                        }
+                    } catch (e) {
+                        // ignore JSON parse errors
+                    }
+                    throw new Error(errMsg);
+                }
+                
+                const json = await res.json();
+                addLog('File uploaded and parsed successfully');
+                loading.classList.remove('show');
+                resultEmpty.textContent = 'File uploaded and parsed. Running checks...';
+                resultEmpty.style.display = 'block';
+                resultTabs.style.display = 'none';
+                lastParseResult = json;
+                lastUploadedFileName = fileInput.files[0].name;
+                isCheckMode = false;
+
+                // Auto-run checks after successful parse
+                if (json.full_text) {
+                    addLog('Starting text-based checks...');
+                    await runChecks();
+                }
+                
+            } catch (err) {
+                loading.classList.remove('show');
+                resultEmpty.textContent = `Error: ${err.message}`;
+                resultEmpty.style.display = 'block';
+                resultTabs.style.display = 'none';
+                hideAllSections();
+                addLog(`Error: ${err.message}`);
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        });
+
+        // Run checks function
+        async function runChecks() {
+            if (!lastParseResult || !lastParseResult.full_text) {
+                addLog('Error: No full_text path available');
+                return;
+            }
+
+            const selectedChecks = getSelectedChecks();
+            if (selectedChecks.length === 0) {
+                resultEmpty.textContent = 'No checks selected. Please select at least one check.';
+                resultEmpty.style.display = 'block';
+                resultTabs.style.display = 'none';
+                hideAllSections();
+                addLog('No checks selected; skipping check run.');
+                return;
+            }
+
+            try {
+                const selectedLabels = selectedChecks.map(labelForCheck);
+                addLog(`Selected checks: ${selectedLabels.join(', ')}`);
+                const fullTextPath = lastParseResult.full_text;
+                addLog(`Reading text from: ${fullTextPath}`);
+                
+                // Fetch the full text from the server
+                const textRes = await fetch(`/get-text?path=${encodeURIComponent(fullTextPath)}`);
+                let fullText = '';
+                
+                if (textRes.ok) {
+                    fullText = await textRes.text();
+                    addLog(`Text loaded: ${fullText.length} characters`);
+                } else {
+                    addLog('Error: Could not read text file');
+                    resultEmpty.textContent = 'Error: Could not read text file. Please ensure the parse was successful.';
+                    resultEmpty.style.display = 'block';
+                    resultTabs.style.display = 'none';
+                    hideAllSections();
+                    return;
+                }
+
+                addLog('Running checks on extracted text...');
+                const checkRes = await fetch('/api/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: fullText,
+                        filename: lastUploadedFileName,
+                        process_dir: lastParseResult.process_dir,
+                        checks: selectedChecks
+                    })
+                });
+
+                if (!checkRes.ok) {
+                    let errMsg = `HTTP error! Status: ${checkRes.status}`;
+                    try {
+                        const errJson = await checkRes.json();
+                        if (errJson && errJson.error) {
+                            errMsg = errJson.error;
+                        }
+                    } catch (e) {
+                        // ignore JSON parse errors
+                    }
+                    throw new Error(errMsg);
+                }
+
+                const checkJson = await checkRes.json();
+                addLog('All selected checks finished.');
+                
+                // Render parsed sections
+                renderSections(checkJson);
+
+            } catch (err) {
+                resultEmpty.textContent = `Error running checks: ${err.message}`;
+                resultEmpty.style.display = 'block';
+                resultTabs.style.display = 'none';
+                hideAllSections();
+                addLog(`Error running checks: ${err.message}`);
+            }
+        }
+    </script>
+</body>
+</html>
