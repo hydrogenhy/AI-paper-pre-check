@@ -93,6 +93,12 @@ def image_quality_check(path):
     order = {"high": 0, "medium": 1, "low": 2, "unknown": 3,}
     results = sorted(results, key=lambda x: order.get(x["confidence"], 99))
 
+    if len(results) == 0:
+        return {
+            "check_type": "images",
+            "results": "No image files found in the specified file."
+        }
+
     return {
         "check_type": "images",
         "results": results
